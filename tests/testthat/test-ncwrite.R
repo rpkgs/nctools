@@ -37,18 +37,18 @@ test_that("ncread and ncwrite works", {
 
     ## test non-raster data ----------------------------------------------------
     expect_true({
-        file = "test-non_raster.nc"
+        file = "test-non_raster2.nc"
         mat <- rnorm(400) %>% matrix(100, 4)
         # error
         ncwrite(list(x1 = mat[, 1:4]), file,
                 range = NULL,
-                prec = "short", 
+                prec = "short",
                 scale = 0.001, offset = 0,
                 # dates = as.Date("2000-01-01"),
                 verbose = FALSE, overwrite = TRUE)
         ncwrite(list(x3 = mat[,1]), file,
                 range = NULL,
-                prec = "short", 
+                prec = "short",
                 scale = 0.001, offset = 0,
                 # dates = as.Date("2000-01-01"),
                 verbose = FALSE, overwrite = FALSE)

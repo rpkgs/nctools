@@ -24,8 +24,51 @@ set_dim_raster2 <- function(x, nlon, nlat) {
 }
 
 probs <- c(0.9, 0.95, 0.975, 0.99, 0.995, 0.9975, 0.999, 0.9995, 0.99975, 0.9999)
-probs = ncdim_def("prob", "Probability", probs)
+dim_prob = ncdim_def("prob", "Probability", probs)
+dim_year = ncdim_def("year", "year", 1:200)
 
-levelplot(x[,,1])
+varnames = setdiff(names(r), c("grid", "grid.origin"))
+dimname_last = c("prob", NA, NA)
+
+for (i in seq_along(varnames)) {
+    varname = varnames[i]
+    dimnames = c("lon", "lat", dimname_last[i]) %>% rm_empty()
+    dimnames %>% print()
+
+    val <- r[[varname]] %>% spdata_array(nlon = nlon, nlat = nlat)
+    print(str(val))
+    # dim = dims[dimnames]
+}
+
+# dims = ncdim_def_lonlat(lon, lat, date)
+# levelplot(x[,,1])
 # image(x)
 
+# missval = NA, untis = "", prec = "float", compression
+# 2. define variables
+    vars <- lapply(seq_along(varnames), function(i) {
+        varname  = varnames[i];  
+        # longname = var.longname[i]
+        units = var.units[i]
+        ndim <- length(dim(lst[[i]])) %>% pmax(1) #
+        ncvar_def(varname, units, dims[1:ndim], missval, 
+            # longname,
+            prec=prec[i], compression = compression)
+    })
+
+    # put variables into fid
+    if (!file.exists(file) || overwrite) {
+        if (file.exists(file) && overwrite) file.remove(file)
+        fid <- nc_create(file, vars)
+    } else {
+        for(var in vars) {
+            # if not exists, add new
+            if (!(var$name %in% names(fid$var))) {
+                fid <- ncvar_add( fid, var )
+            }
+        }
+    }
+    on.exit(nc_close(fid))
+
+    # write values
+    ncwrite_var(lst, fid, vars, prec, scale, offset)

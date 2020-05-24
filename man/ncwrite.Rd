@@ -6,11 +6,13 @@
 \title{Write CMIP5 nc file}
 \usage{
 ncwrite(
-  lst = NULL,
+  lst,
   file,
   var.units = NULL,
   var.longname = NULL,
   prec = "float",
+  dims = NULL,
+  dimnames_last = NULL,
   range = c(-180, 180, -90, 90),
   dates = NULL,
   missval = -9999L,

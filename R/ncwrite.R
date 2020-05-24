@@ -36,11 +36,12 @@
 #' @import ncdf4
 #' @importFrom utils packageVersion
 #' @export
-ncwrite <- function(lst = NULL,
-    file,
+ncwrite <- function(lst, file,
     var.units = NULL,
     var.longname = NULL,
     prec = "float",
+    dims = NULL,
+    dimnames_last = NULL,
     range = c(-180, 180, -90, 90),
     dates = NULL,
     missval = -9999L,
@@ -51,35 +52,50 @@ ncwrite <- function(lst = NULL,
     overwrite = FALSE,
     verbose = FALSE)
 {
-    # 0. check parameters ------------------------------------------------------
-    varname <- names(lst) %>% set_names(., .)
-    nvar <- length(varname)
-    if (is.null(var.units))    var.units <- rep("", nvar)
-    if (is.null(var.longname)) var.longname <- varname
-
-    if (length(prec) == 1) prec <- rep(prec, nvar)
-
     dim <- dim(lst[[1]])
     if (is.null(dim)) dim <- length(lst[[1]])
-
     ndim <- length(dim)
-    if (ndim > 3 || ndim <= 1) range = NULL
 
     fid <- NULL
     if (file.exists(file) && !overwrite) {
         fid <- nc_open(file, write = TRUE)
-        dims <- fid$dim
+        if (is.null(dims)) dims <- fid$dim
     } else {
-        dims <- ncdim_def_range(dim, range, dates)
+        if (is.null(dims)) {
+            if (ndim > 3 || ndim <= 1) range <- NULL
+            # if file not exist
+            dims <- ncdim_def_range(dim, range, dates)
+        }
     }
 
+    # 1. check parameters ------------------------------------------------------
+    varnames <- names(lst) %>% set_names(., .)
+    nvar <- length(varnames)
+    if (is.null(var.units)) var.units <- rep("", nvar)
+    if (is.null(var.longname)) var.longname <- varnames
+
+    if (length(prec) == 1) prec <- rep(prec, nvar)
+    if (length(dimnames_last) == 1) dimnames_last <- rep(dimnames_last, nvar)
+    # --------------------------------------------------------------------------
+    
     # 2. define variables
-    vars <- lapply(seq_along(varname), function(i) {
-        name  = varname[i];  longname = var.longname[i]
-        units = var.units[i]
-        ndim <- length(dim(lst[[i]])) %>% pmax(1) #
-        ncvar_def(name, units, dims[1:ndim], missval, longname,
-            prec=prec[i], compression = compression)
+    vars <- lapply(seq_along(varnames), function(i) {
+        varname  = varnames[i]
+        longname = var.longname[i]
+        units    = var.units[i]
+
+        if (!is.null(dimnames_last)) {
+            # for spatial data
+            dimnames = c("lon", "lat", dimnames_last[i]) %>% rm_empty()
+            dim = dims[dimnames]
+        } else {
+            ndim <- length(dim(lst[[i]])) %>% pmax(1) #
+            dim = dims[1:ndim]
+        }
+
+        ncvar_def(varname, units, dim, missval, longname,
+            prec = prec[i], compression = compression
+        )
     })
 
     # put variables into fid
@@ -87,10 +103,10 @@ ncwrite <- function(lst = NULL,
         if (file.exists(file) && overwrite) file.remove(file)
         fid <- nc_create(file, vars)
     } else {
-        for(var in vars) {
+        for (var in vars) {
             # if not exists, add new
             if (!(var$name %in% names(fid$var))) {
-                fid <- ncvar_add( fid, var )
+                fid <- ncvar_add(fid, var)
             }
         }
     }
@@ -100,8 +116,8 @@ ncwrite <- function(lst = NULL,
     ncwrite_var(lst, fid, vars, prec, scale, offset)
 
     # add global attr
-    history <- paste("Created by nctools", date(), sep=", ")
-    ncatt_put(fid, 0, "history",history)
+    history <- paste("Created by nctools", date(), sep = ", ")
+    ncatt_put(fid, 0, "history", history)
     Conventions <- sprintf("nctools version %s", packageVersion("nctools"))
     ncatt_put(fid, 0, "Conventions", Conventions)
 
@@ -111,7 +127,6 @@ ncwrite <- function(lst = NULL,
             ncatt_put(fid, 0, name, attrs[i])
         }
     }
-
     if (verbose) print(fid)
     invisible()
 }
@@ -136,11 +151,11 @@ ncwrite_var <- function(lst, fid, vars, prec, scale, offset) {
         # 2. put values
         vals <- (lst[[i]] - offset_i) / scale_i
         # convert type
-        if (prec[i] %in% c("integer", "short")) { 
+        if (prec[i] %in% c("integer", "short")) {
             # mode(vals) <- "integer"
             vals <- round(vals)
             # 避免精度在小数点保留位数上出现损失
-        }        
+        }
         ncvar_put(fid, varid, vals)
     }
 }
