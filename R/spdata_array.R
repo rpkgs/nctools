@@ -2,29 +2,39 @@
 #'
 #' @param vals `[ngrid, ntime]`
 #' If ndim <= 2, range and cellsize is necessary.
+#' @param range A numeric vector, `[lon_min, lon_max, lat_min, lat_max]`
+#' @param cellsize double, cell size
+#' @param nlon,nlat If nlon and nlat provided, range and cellsize will be ignored
 #'
 #' @keywords internal
+#' @examples
+#' #
 #' @export
-spdata_array <- function(vals, range = NULL, cellsize = 0.1, flip = TRUE, to2d = FALSE) {
+spdata_array <- function(vals,
+    range = NULL, cellsize = 0.1,
+    nlon = NULL, nlat = NULL,
+    flip = FALSE, to2d = FALSE)
+{
     dim <- dim(vals)
     ndim <- length(dim)
 
-    if (!is.null(range)) {
+    isnon_lonlat = is.null(nlon) && is.null(nlat)
+    if (isnon_lonlat && !is.null(range)) {
         lon_range <- range[1:2]
         lat_range <- range[3:4]
-        nlon <- diff(lon_range)/cellsize
-        nlat <- diff(lat_range)/cellsize
+        nlon <- diff(lon_range) / cellsize
+        nlat <- diff(lat_range) / cellsize
     }
 
     ntime = 1
     if (ndim <= 1) {
-        vals <- as.matrix(vals)
+        # vals <- vals#if (isnon_lonlat) as.matrix(vals) else matrix(vals, nlon, nlat)
     } else if (ndim >= 2) {
-        if (is.null(range)) {
+        if (isnon_lonlat && is.null(range)) {
             nlon = dim[1]
             nlat = dim[2]
         }
-        ntime = if (ndim == 2 && is.null(range)) 1 else dim[ndim]
+        ntime = if (ndim == 2 && is.null(range) && isnon_lonlat) 1 else dim[ndim]
         vals <- set_dim(vals, c(nlon*nlat, ntime))
     }
     if (flip) {

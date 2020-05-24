@@ -70,7 +70,7 @@ ncwrite <- function(lst = NULL,
         fid <- nc_open(file, write = TRUE)
         dims <- fid$dim
     } else {
-        dims <- ncvar_def_sp(dim, range, dates)
+        dims <- ncdim_def_range(dim, range, dates)
     }
 
     # 2. define variables
@@ -82,6 +82,7 @@ ncwrite <- function(lst = NULL,
             prec=prec[i], compression = compression)
     })
 
+    # put variables into fid
     if (!file.exists(file) || overwrite) {
         if (file.exists(file) && overwrite) file.remove(file)
         fid <- nc_create(file, vars)
@@ -94,6 +95,28 @@ ncwrite <- function(lst = NULL,
         }
     }
     on.exit(nc_close(fid))
+
+    # write values
+    ncwrite_var(lst, fid, vars, prec, scale, offset)
+
+    # add global attr
+    history <- paste("Created by nctools", date(), sep=", ")
+    ncatt_put(fid, 0, "history",history)
+    Conventions <- sprintf("nctools version %s", packageVersion("nctools"))
+    ncatt_put(fid, 0, "Conventions", Conventions)
+
+    if (!missing(attrs)) {
+        for (i in seq_along(attrs)) {
+            name = names(attrs)[i]
+            ncatt_put(fid, 0, name, attrs[i])
+        }
+    }
+
+    if (verbose) print(fid)
+    invisible()
+}
+
+ncwrite_var <- function(lst, fid, vars, prec, scale, offset) {
     # fill in values
     for (i in seq_along(vars)) {
         varid = vars[[i]]
@@ -120,104 +143,15 @@ ncwrite <- function(lst = NULL,
         }        
         ncvar_put(fid, varid, vals)
     }
-
-    # add global attr
-    history <- paste("Created by rPML", date(), sep=", ")
-    ncatt_put(fid, 0, "history",history)
-    Conventions <- sprintf("rPML version %s", packageVersion("rPML"))
-    ncatt_put(fid, 0, "Conventions", Conventions)
-
-    if (!missing(attrs)) {
-        for (i in seq_along(attrs)) {
-            name = names(attrs)[i]
-            ncatt_put(fid, 0, name, attrs[i])
-        }
-    }
-    # put additional attributes into dimension and data variables
-    # ncatt_put(fid,"lon","axis","X") #,verbose=FALSE) #,definemode=FALSE)
-    # ncatt_put(fid,"lat","axis","Y")
-    # ncatt_put(fid,"time","axis","T")
-    # # add global attributes
-    # ncatt_put(fid, 0,"institution", "Sun Yat-sen University")
-    # ncatt_put(fid,0,"source",datasource$value)
-    # ncatt_put(fid,0,"references",references$value)
-    # ncatt_put(fid,0,"Conventions",Conventions$value)
-    # ncatt_put(fid, 0, "range", range)
-    if (verbose) print(fid)
-    invisible()
 }
 
-
-# ' @param range 2 numeric vector
-get_coord <- function(range, length) {
-    from <- range[1]
-    to   <- range[2]
-    values   <- seq(from, to, length.out = length + 1)
-    cellsize <- diff(values[1:2])
-    values[-1] - cellsize/2
-}
-
-# ndim = 2 or 3
-ncvar_def_sp <- function(
-    dim,
-    range = c(-180, 180, -90, 90),
-    dates = NULL)
-{
-    ndim = length(dim) %>% pmax(1)
-    # 1. The last dimension is treated as time
-    date.origin <- as.POSIXct(0, origin = "1970-01-01", tz = "GMT")
-    if (is.null(dates)) {
-        dates <- as.Date(0:(dim[ndim] - 1), date.origin)
-    }
-    times <- difftime(dates, date.origin, units = "days") %>% as.numeric()
-    times <- times[1:dim[ndim]]
-    timedim <- ncdim_def("time", "days since 1970-01-01", times, calendar = "gregorian", unlim = TRUE)
-
-    # 1. define dimensions -----------------------------------------------------
-    if (!is.null(range)) {
-        lons <- get_coord(range[1:2], dim[1])
-        lats <- get_coord(range[3:4], dim[2])
-        # define dimensions
-        londim <- ncdim_def("lon", "degrees_east", lons)
-        latdim <- ncdim_def("lat", "degrees_north", lats)
-        dims <- list(lon = londim, lat = latdim, time = timedim)
-    } else {
-        dimnames <- c("x", "y", "z")
-        if (ndim <= 3) {
-            dims <- lapply(1:ndim, function(i) { ncdim_def(dimnames[i], "-", 1:dim[i]) })
-            dims[[ndim]] <- timedim
-            # names(dims)[ndim] <- "time"
-        } else {
-            stop("ndim should be less than 3!")
-        }
-    }
-
-    # Calendar types include 360 day calendars("360_day", "360"), 365 day calendars
-    # ("365_day", "365", "noleap"), and Gregorian calendars ("gregorian",
-    # "proleptic_gregorian")
-    dims
-}
-
-#' @param r `raster2` object returned by [ncwrite()]
-#' @param varname variable name in the data of `r`
-#' @param ... other parameters to [ncwrite]
-#' 
-#' @rdname ncwrite
-#' @export
-ncwrite.raster2 <- function(r, file, varname = "array", ...){
-    # only surport regular grids
-    lons <- r$grid$lon
-    lats <- r$grid$lat
-
-    cellsize_x <- diff(lons[1:2])
-    cellsize_y <- diff(lats[1:2])
-
-    lon_range <- lons[c(1, length(lons))] + c(-1, 1)*cellsize_x/2
-    lat_range <- lats[c(1, length(lats))] + c(-1, 1)*cellsize_y/2
-
-    range <- c(lon_range, lat_range)
-
-    lst_nc <- list(r$data) %>% set_names(varname)
-
-    ncwrite(lst_nc, file, dates = r$grid$date, range = range, ...)
-}
+# put additional attributes into dimension and data variables
+# ncatt_put(fid,"lon","axis","X") #,verbose=FALSE) #,definemode=FALSE)
+# ncatt_put(fid,"lat","axis","Y")
+# ncatt_put(fid,"time","axis","T")
+# # add global attributes
+# ncatt_put(fid, 0,"institution", "Sun Yat-sen University")
+# ncatt_put(fid,0,"source",datasource$value)
+# ncatt_put(fid,0,"references",references$value)
+# ncatt_put(fid,0,"Conventions",Conventions$value)
+# ncatt_put(fid, 0, "range", range)

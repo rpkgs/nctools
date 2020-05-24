@@ -4,13 +4,30 @@
 \alias{spdata_array}
 \title{Convert Spatial* data into 3d array}
 \usage{
-spdata_array(vals, range = NULL, cellsize = 0.1, flip = TRUE, to2d = FALSE)
+spdata_array(
+  vals,
+  range = NULL,
+  cellsize = 0.1,
+  nlon = NULL,
+  nlat = NULL,
+  flip = FALSE,
+  to2d = FALSE
+)
 }
 \arguments{
 \item{vals}{\verb{[ngrid, ntime]}
 If ndim <= 2, range and cellsize is necessary.}
+
+\item{range}{A numeric vector, \verb{[lon_min, lon_max, lat_min, lat_max]}}
+
+\item{cellsize}{double, cell size}
+
+\item{nlon, nlat}{If nlon and nlat provided, range and cellsize will be ignored}
 }
 \description{
 Convert Spatial* data into 3d array
+}
+\examples{
+#
 }
 \keyword{internal}

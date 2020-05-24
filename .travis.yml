@@ -2,3 +2,13 @@
 
 language: R
 cache: packages
+
+addons:
+  apt:
+    packages:
+      - libnetcdf-dev
+
+# - libgdal-dev
+# - libproj-dev
+after_success:
+  - Rscript -e 'covr::codecov()'
