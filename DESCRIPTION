@@ -1,0 +1,23 @@
+Package: nctools
+Title: Tools tidy nc files
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Dongdong", "Kong", role = c("aut", "cre"), email = "kongdd.sysu@gmail.com"))
+Description: Read, write, and process NETCDF files. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Suggests: 
+    testthat,
+    covr
+Depends:
+    R (>= 3.1)
+Imports: 
+    ncdf4,
+    PCICt,
+    magrittr, 
+    lubridate,
+    stringr,
+    utils
