@@ -77,7 +77,7 @@ ncwrite <- function(lst, file,
     if (length(prec) == 1) prec <- rep(prec, nvar)
     if (length(dimnames_last) == 1) dimnames_last <- rep(dimnames_last, nvar)
     # --------------------------------------------------------------------------
-    
+
     # 2. define variables
     vars <- lapply(seq_along(varnames), function(i) {
         varname  = varnames[i]
@@ -92,7 +92,6 @@ ncwrite <- function(lst, file,
             ndim <- length(dim(lst[[i]])) %>% pmax(1) #
             dim = dims[1:ndim]
         }
-
         ncvar_def(varname, units, dim, missval, longname,
             prec = prec[i], compression = compression
         )
@@ -112,6 +111,7 @@ ncwrite <- function(lst, file,
     }
     on.exit(nc_close(fid))
 
+    # browser()
     # write values
     ncwrite_var(lst, fid, vars, prec, scale, offset)
 

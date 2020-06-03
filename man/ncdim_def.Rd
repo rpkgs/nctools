@@ -6,9 +6,12 @@
 \alias{ncdim_def_range}
 \title{Define a netCDF Dimension}
 \usage{
-ncdim_def_lonlat(lons, lats, dates = NULL)
+ncdim_def_lonlat(lons, lats, dates = NULL, ...)
 
 ncdim_def_range(dim, range = c(-180, 180, -90, 90), dates = NULL)
+}
+\arguments{
+\item{...}{ignored parameters}
 }
 \description{
 Define a netCDF Dimension

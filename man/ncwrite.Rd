@@ -2,7 +2,7 @@
 % Please edit documentation in R/ncwrite.R, R/ncwrite_raster2.R
 \name{ncwrite}
 \alias{ncwrite}
-\alias{ncwrite.raster2}
+\alias{ncwrite_raster2}
 \title{Write CMIP5 nc file}
 \usage{
 ncwrite(
@@ -24,7 +24,7 @@ ncwrite(
   verbose = FALSE
 )
 
-ncwrite.raster2(r, file, varname = "array", ...)
+ncwrite_raster2(r, file, dims = NULL, dimnames_last, overwrite = TRUE, ...)
 }
 \arguments{
 \item{lst}{A named list of 3d arrays, which have the dimension of \verb{[nlon, nlat, ntime]}.
@@ -64,9 +64,9 @@ references, institution.}
 
 \item{r}{\code{raster2} object returned by \code{\link[=ncwrite]{ncwrite()}}}
 
-\item{varname}{variable name in the data of \code{r}}
-
 \item{...}{other parameters to \link{ncwrite}}
+
+\item{varname}{variable name in the data of \code{r}}
 }
 \description{
 Write CMIP5 nc file

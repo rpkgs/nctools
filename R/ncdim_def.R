@@ -9,13 +9,17 @@ def_time <- function(dates = NULL) {
 
 #' @name ncdim_def
 #' @title Define a netCDF Dimension
+#' 
+#' @param ... ignored parameters
+#' 
 #' @export 
-ncdim_def_lonlat <- function(lons, lats, dates = NULL) {
+ncdim_def_lonlat <- function(lons, lats, dates = NULL, ...) {
     londim <- ncdim_def("lon", "degrees_east", lons)
     latdim <- ncdim_def("lat", "degrees_north", lats)
 
-    timedim = def_time(dates)
-    list(lon = londim, lat = latdim, time = timedim)
+    ans = list(lon = londim, lat = latdim, ...)
+    if (!is.null(dates)) ans$time = def_time(dates)
+    ans
 }
 
 # dims <- ncvar_def_sp(dim, range, dates)
