@@ -59,15 +59,15 @@ nc_date <- function(fid, ntime = -1, to_char = FALSE){
 }
 
 #' Aggregate to yearly scale
-#' 
+#'
 #' @param infile,outfile INPUT and OUTPUT nc files
-#' @param vars_mean variables which are aggregated by `mean`. The others will be 
-#' `sum`. 
-#' 
+#' @param vars_mean variables which are aggregated by `mean`. The others will be
+#' `sum`.
+#'
 #' @note Current function can't handle with NA vlaues.
-#' 
+#'
 #' @importFrom lubridate make_date
-#' @export 
+#' @export
 nc_aggregateToYearly <- function(infile, outfile, vars_mean = NULL, overwrite = FALSE) {
     varnames <- nc_info(infile, FALSE)
     dates <- nc_date(infile, to_char = FALSE)
@@ -86,7 +86,7 @@ nc_aggregateToYearly <- function(infile, outfile, vars_mean = NULL, overwrite = 
 
         type <- if (!is.null(vars_mean) && varname %in% vars_mean) "mean" else "sum"
         vals <- aggregate_yearly(array, dates, type = type)
-    
+
         ncwrite(set_names(list(vals), varname), outfile,
             range = range,
             # var.units, missval = missval,

@@ -142,7 +142,7 @@ nc_merge <- function(d,
     grid$dim[3]        <- length(date_all)
     
     grid$date <- date_all
-    grid$object_size <- format.object_size(prod(grid$dim)*4, "auto") # single in cpp?
+    grid$object_size <- utils:::format.object_size(prod(grid$dim) * 4, "auto") # single in cpp?
     # rm(lst, l); gc()
     structure(list(grid.origin = grid.origin, grid = grid, data = array_val), 
         class = "raster2")

@@ -1,4 +1,4 @@
-DATE_FORMAT <- "%4Y-%m-%d"
+DATE_FORMAT <- "%Y-%m-%d"
 
 #' read nc file
 #'

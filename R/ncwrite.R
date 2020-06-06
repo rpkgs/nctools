@@ -111,7 +111,6 @@ ncwrite <- function(lst, file,
     }
     on.exit(nc_close(fid))
 
-    # browser()
     # write values
     ncwrite_var(lst, fid, vars, prec, scale, offset)
 
