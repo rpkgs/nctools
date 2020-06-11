@@ -15,6 +15,7 @@ ncwrite(
   dimnames_last = NULL,
   range = c(-180, 180, -90, 90),
   dates = NULL,
+  calendar = "gregorian",
   missval = -9999L,
   compression = NA,
   scale,

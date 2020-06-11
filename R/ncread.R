@@ -106,13 +106,13 @@ ncread <- function(file,
 
     date <- NULL
     if (check_date) {
-        date <- getCMIP5date(nslice, file, calendar, origin, check_date = check_date) # character like that '2010-02-30'
+        date <- guess_date(nslice, file, calendar, origin, check_date = check_date) # character like that '2010-02-30'
     } else {
         if (!is.null(calendar)) {
-            date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals)*86400} %>% format(DATE_FORMAT)
+            date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals)*86400}
         }
     }
-    
+
     # time <- ncvar_get(fid, "time")
     if (!missing(DatePeriod) && !is.null(date)){
         # get I_time according to period
@@ -160,6 +160,17 @@ ncread <- function(file,
         count <- c(length(I_lon), length(I_lat), ntime)
     }
 
+    ## fix the error of non-time data
+    ndim <- fid$var[[varnames[1]]]$ndims
+    dims = fid$var[[varnames[1]]]$dim %>% sapply(function(x) x$name)
+    dim_last = dims[ndim]
+
+    if (dim_last != "time") {
+        count[3] = -1
+        date = NULL
+        ntime = fid$dim[[dim_last]]$len
+    }
+
     vals <- NULL
     if (is.null(ntime) || ntime > 0) {
         # date maybe incorrect if not cmip5 files
@@ -186,54 +197,4 @@ ncread <- function(file,
         dim = c(length(lon), length(lat), length(date)))
     structure(list(grid.origin = grid.origin, grid = grid, data = vals),
         class = "raster2")
-}
-
-#' getCMIP5date
-#' 
-#' For `360_day` calendar, converting to `Date` will lead to error.
-#' 
-#' @inheritParams ncread
-#' @inheritParams base::as.Date
-#' @param nslice length of time in original nc file.
-#' @param calendar the calendar type.
-#' 
-#' @return Date character.
-#' 
-#' @keywords internal
-#' 
-#' @export
-#' @importFrom stringr str_replace_all
-#' 
-#' @examples
-#' \dontrun{
-#' getCMIP5date(nslice, file, calendar = "365")
-#' }
-getCMIP5date <- function(nslice, file, calendar = "365", origin, check_date = FALSE){
-    date_file <- basename(file) %>% {str_extract_all(., "\\d{8}")[[1]]} %>% 
-        str_replace_all(., "(?<=^\\d{4})|(?<=^\\d{6})", "-")
-    origin2    <- date_file[1]
-    if (is.na(origin2) && !is.na(origin)) {
-        origin2 <- origin
-    }
-
-    # calendar maybe missing 
-    date <- tryCatch({
-        {as.PCICt(origin2, cal=calendar) + (0:(nslice-1))*86400} %>% format(DATE_FORMAT)
-    }, error = function(e){
-        message(sprintf("[nc_date] %s, %s\n", basename(file), e$message))
-    })
-    date_band <- c(first(date), last(date))
-
-    if (is.null(date)) {
-        warning(sprintf("[nc_date] %s, %s", basename(file), "file to generate date!")) 
-        return(NULL)
-    }
-    
-    if (check_date) {
-        # check date | 1. duplicated date，(e.g. BNU-ESM)
-        if (!all(date_file == date_band)){
-            simpleError(sprintf("[nc_date] %s, %s", basename(file), "calendar type error in nc file!"))
-        }       
-    }
-    return(date)
 }

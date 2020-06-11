@@ -8,9 +8,16 @@
 \usage{
 ncdim_def_lonlat(lons, lats, dates = NULL, ...)
 
-ncdim_def_range(dim, range = c(-180, 180, -90, 90), dates = NULL)
+ncdim_def_range(
+  dim,
+  range = c(-180, 180, -90, 90),
+  dates = NULL,
+  calendar = "gregorian"
+)
 }
 \arguments{
+\item{dates}{PCICt object. The default origin is '1970-01-01'}
+
 \item{...}{ignored parameters}
 }
 \description{

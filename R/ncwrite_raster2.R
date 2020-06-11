@@ -8,18 +8,22 @@ ncwrite_raster2 <- function(r, file, dims = NULL, dimnames_last,
     overwrite = TRUE, ...)
 {
     # This function is tested at Threshold.
-    if (missing(dimnames_last)) dimnames_last = c("prob", NA, NA)
+    if (missing(dimnames_last)) dimnames_last = NULL
 
     grid <- r$grid
+    calendar <- r$grid.origin$calendar
+    if (is.null(calendar)) calendar = "gregorian"
+
     lon  <- grid$lon
     lat  <- grid$lat
-    date <- grid$date %>% as.Date()
+    date <- grid$date
     dims <- ncdim_def_lonlat(lon, lat, date)
     year <- r$grid$year
 
     probs <- c(0.9, 0.95, 0.975, 0.99, 0.995, 0.9975, 0.999, 0.9995, 0.99975, 0.9999)
+
     dim_prob = ncdim_def("prob", "Probability", probs)
-    dim_year = ncdim_def("year", "year", year)
+    dim_year = if (is.null(year)) NULL else ncdim_def("year", "year", year)
 
     dims0 = ncdim_def_lonlat(lon, lat, prob = dim_prob, year = dim_year)
     dims %<>% c(dims0)
@@ -35,6 +39,7 @@ ncwrite_raster2 <- function(r, file, dims = NULL, dimnames_last,
     dimnames_last[dims_last == 1] = NA
     dimnames_last[varnames == "TRS"] = "prob"
     dimnames_last[dims_last == length(date)]  = "time"
+    dimnames_last[dims_last == length(year)]  = "year"
 
     I_year = grep("year", varnames)
     dimnames_last[I_year] = "year"

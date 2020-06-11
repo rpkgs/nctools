@@ -2,7 +2,7 @@
 # library(sp2)
 
 test_that("multiplication works", {
-    infile = system.file("inst/extdata/HI_Threshold_MIROC-ESM.RDS", package = "nctools")
+    infile = system.file("extdata/HI_Threshold_MIROC-ESM.RDS", package = "nctools")
     r <- readRDS(infile)
     outfile = "test-ncwrite_raster.nc"
     ncwrite_raster2(r, outfile)

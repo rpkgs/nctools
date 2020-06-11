@@ -44,6 +44,7 @@ ncwrite <- function(lst, file,
     dimnames_last = NULL,
     range = c(-180, 180, -90, 90),
     dates = NULL,
+    calendar = "gregorian",
     missval = -9999L,
     compression = NA,
     scale,
@@ -64,7 +65,7 @@ ncwrite <- function(lst, file,
         if (is.null(dims)) {
             if (ndim > 3 || ndim <= 1) range <- NULL
             # if file not exist
-            dims <- ncdim_def_range(dim, range, dates)
+            dims <- ncdim_def_range(dim, range, dates, calendar)
         }
     }
 

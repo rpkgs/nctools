@@ -27,7 +27,7 @@ test_that("ncread and ncwrite works", {
         ncwrite(list(Temperature2 = data_temp), file, var.units, missval = missval,
                 dates = dates ,
                 verbose = FALSE, overwrite = FALSE)
-        expect_equal(dates, nc_date(file))
+        expect_equal(format(dates), format(nc_date(file)))
         ## 2. read netcdf file
         l <- ncread(file, c(1, 2))
         file.remove(file)

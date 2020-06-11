@@ -1,9 +1,16 @@
-DATE_ORIGIN <- as.POSIXct(0, origin = "1970-01-01", tz = "GMT")
-
+#' nc file dimension definition
+#' @export 
 def_time <- function(dates = NULL) {
-    times <- difftime(dates, DATE_ORIGIN, units = "days") %>% as.numeric()
+    if (!is(dates, "PCICt")) dates = as.PCICt(format(dates), cal = "gregorian")
+    
+    calendar = attr(dates, "cal")
+    # if (is.null(calendar)) calendar <- "gregorian"
+    # DATE_ORIGIN = as.PCICt("1970-01-01", cal = calendar) # "360_day"
+    times = as.numeric(dates)/86400 # convert to days
+    
+    # times <- difftime(dates, DATE_ORIGIN, units = "days") %>% as.numeric()
     # times <- times[1:dim[ndim]]
-    timedim <- ncdim_def("time", "days since 1970-01-01", times, calendar = "gregorian", unlim = TRUE)
+    timedim <- ncdim_def("time", "days since 1970-01-01", times, calendar = calendar, unlim = TRUE)
     timedim
 }
 
@@ -23,15 +30,21 @@ ncdim_def_lonlat <- function(lons, lats, dates = NULL, ...) {
 }
 
 # dims <- ncvar_def_sp(dim, range, dates)
+#' @param dates PCICt object. The default origin is '1970-01-01'
+#' 
 #' @rdname ncdim_def
 ncdim_def_range <- function(
     dim,
     range = c(-180, 180, -90, 90),
-    dates = NULL)
+    dates = NULL, 
+    calendar = "gregorian")
 {
+    if (is.null(calendar)) calendar <- "gregorian"
+    DATE_ORIGIN = as.PCICt("1970-01-01", cal = calendar) # "360_day"
+
     ndim = length(dim) %>% pmax(1)
     # 1. The last dimension is treated as time
-    if (is.null(dates)) dates <- as.Date(0:(dim[ndim] - 1), DATE_ORIGIN)
+    if (is.null(dates)) dates = as.PCICt(DATE_ORIGIN, cal=calendar) + (0:(dim[ndim] - 1))*86400
     timedim = def_time(dates)
 
     # 2. define dimensions -----------------------------------------------------
@@ -52,7 +65,7 @@ ncdim_def_range <- function(
             stop("ndim should be less than 3!")
         }
     }
-
+    
     # Calendar types include 360 day calendars("360_day", "360"), 365 day calendars
     # ("365_day", "365", "noleap"), and Gregorian calendars ("gregorian",
     # "proleptic_gregorian")
