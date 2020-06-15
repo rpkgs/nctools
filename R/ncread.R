@@ -1,5 +1,3 @@
-DATE_FORMAT <- "%Y-%m-%d"
-
 #' read nc file
 #'
 #' `getCMIP5date` make sure that if dates geenrated according to
@@ -115,6 +113,7 @@ ncread <- function(file,
 
     # time <- ncvar_get(fid, "time")
     if (!missing(DatePeriod) && !is.null(date)){
+        DatePeriod = check_DatePeriod(DatePeriod, calendar) 
         # get I_time according to period
         I_time <- which(date >= DatePeriod[1] & date <= DatePeriod[2])
         ntime  <- length(I_time) # if empty, NULL will return in L111
@@ -197,4 +196,12 @@ ncread <- function(file,
         dim = c(length(lon), length(lat), length(date)))
     structure(list(grid.origin = grid.origin, grid = grid, data = vals),
         class = "raster2")
+}
+
+check_DatePeriod <- function(DatePeriod, calendar) {
+    if (calendar %in% c("360", "360_day")) {
+        DatePeriod[2] %<>% gsub("31$", "30", .) 
+    }
+    as.PCICt(DatePeriod, calendar)
+    # DatePeriod
 }

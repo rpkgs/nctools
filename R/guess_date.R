@@ -1,5 +1,7 @@
+DATE_FORMAT <- "%Y-%m-%d"
+
 #' guess CMIP5 date according to nc file name
-#' 
+#'
 #' @inheritParams ncread
 #' @inheritParams base::as.Date
 #' @param nslice length of time in original nc file.
@@ -10,7 +12,7 @@
 #' @keywords internal
 #' @export
 #' @importFrom stringr str_replace_all
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' guess_date(nslice, file, calendar = "365")
@@ -29,7 +31,8 @@ guess_date <- function(nslice, file, calendar = "365", origin, check_date = FALS
     }, error = function(e){
         message(sprintf("[nc_date] %s, %s\n", basename(file), e$message))
     })
-    date_band <- c(first(date), last(date))  %>% format(DATE_FORMAT)
+
+    date_band <- date[c(1, length(date))] %>% format(DATE_FORMAT)
 
     if (is.null(date)) {
         warning(sprintf("[nc_date] %s, %s", basename(file), "file to generate date!"))

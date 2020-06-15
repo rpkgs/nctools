@@ -65,11 +65,11 @@ in \code{d}.
 }
 \examples{
 \dontrun{
-library(magrittr) 
+library(magrittr)
 range <- c(15, 55, 70,140)
 
 d_files   <- CMIP5Files_filter(files)
-lst_dfiles <- d_files \%>\% split(., .$model) 
+lst_dfiles <- d_files \%>\% split(., .$model)
 
 i = 1
 d <- lst_dfiles[[i]]

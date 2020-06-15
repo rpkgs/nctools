@@ -22,7 +22,7 @@ nc_date <- function(fid, ntime = -1, to_char = FALSE){
     nslice <- fid$dim$time$len
     if (ntime == -1) ntime <- nslice
 
-    date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals[1:ntime])*86400} 
+    date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals[1:ntime])*86400}
     if (to_char) date %<>% format(DATE_FORMAT)
     date
 }
