@@ -120,6 +120,8 @@ nc_merge <- function(d,
     if (!bigmemory){
         along <- dim(lst[[1]]$data[[1]]) %>% length()
         array_val <- map(lst, ~.$data[[1]]) %>% abind(along = along)
+
+        rm(lst); gc(); gc()
     } else {
         array_val <- sub.big.matrix(array_val, firstCol = 1, lastCol = k_start)
     }
