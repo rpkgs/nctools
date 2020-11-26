@@ -13,9 +13,6 @@ guess_date(nslice, file, calendar = "365", origin, check_date = FALSE)
 
 \item{calendar}{the calendar type.}
 
-\item{origin}{a \code{Date} object, or something which can be coerced by
-    \code{as.Date(origin, \dots)} to such an object.}
-
 \item{check_date}{If true, check whether date in nc file is consistent with
 \code{date_begin} and \code{date_end} in its filename.}
 }

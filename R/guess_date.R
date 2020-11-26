@@ -3,7 +3,6 @@ DATE_FORMAT <- "%Y-%m-%d"
 #' guess CMIP5 date according to nc file name
 #'
 #' @inheritParams ncread
-#' @inheritParams base::as.Date
 #' @param nslice length of time in original nc file.
 #' @param calendar the calendar type.
 #'
