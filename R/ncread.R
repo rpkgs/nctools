@@ -113,7 +113,7 @@ ncread <- function(file,
 
     # time <- ncvar_get(fid, "time")
     if (!missing(DatePeriod) && !is.null(date)){
-        DatePeriod = check_DatePeriod(DatePeriod, calendar) 
+        DatePeriod = check_DatePeriod(DatePeriod, calendar)
         # get I_time according to period
         I_time <- which(date >= DatePeriod[1] & date <= DatePeriod[2])
         ntime  <- length(I_time) # if empty, NULL will return in L111
@@ -161,6 +161,8 @@ ncread <- function(file,
 
     ## fix the error of non-time data
     ndim <- fid$var[[varnames[1]]]$ndims
+    if (is.null(ndim)) return(ncvar_get(fid, varnames[1])) # return attributes
+
     dims = fid$var[[varnames[1]]]$dim %>% sapply(function(x) x$name)
     dim_last = dims[ndim]
 
@@ -200,7 +202,7 @@ ncread <- function(file,
 
 check_DatePeriod <- function(DatePeriod, calendar) {
     if (calendar %in% c("360", "360_day")) {
-        DatePeriod[2] %<>% gsub("31$", "30", .) 
+        DatePeriod[2] %<>% gsub("31$", "30", .)
     }
     as.PCICt(DatePeriod, calendar)
     # DatePeriod
