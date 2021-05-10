@@ -15,7 +15,7 @@ def_time <- function(dates = NULL) {
 }
 
 #' @name ncdim_def
-#' @title Define a netCDF Dimension
+#' @title Define a netCDF Dimension for `ncwrite`
 #' 
 #' @param ... ignored parameters
 #' 

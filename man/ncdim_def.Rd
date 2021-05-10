@@ -4,7 +4,7 @@
 \alias{ncdim_def}
 \alias{ncdim_def_lonlat}
 \alias{ncdim_def_range}
-\title{Define a netCDF Dimension}
+\title{Define a netCDF Dimension for \code{ncwrite}}
 \usage{
 ncdim_def_lonlat(lons, lats, dates = NULL, ...)
 
@@ -21,5 +21,5 @@ ncdim_def_range(
 \item{...}{ignored parameters}
 }
 \description{
-Define a netCDF Dimension
+Define a netCDF Dimension for \code{ncwrite}
 }

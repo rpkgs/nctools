@@ -18,7 +18,9 @@ Imports:
     bigmemory, 
     abind,
     crayon,
-    utils
+    utils, 
+    Ipaper
+Remotes: rpkgs/Ipaper
 Suggests: 
     testthat,
     covr, 

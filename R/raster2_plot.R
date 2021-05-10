@@ -80,7 +80,6 @@ get_grid.raster2 <- function(x, varname = NULL, range = NULL, fix_lon360 = TRUE)
     grid
 }
 
-
 get_grid.lonlat <- function(lon, lat, fix_lon360 = FALSE) {
     lon2 <- seq(min(lon), max(lon), length.out = length(lon))
     lat2 <- seq(min(lat), max(lat), length.out = length(lat))
