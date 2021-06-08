@@ -25,6 +25,7 @@ nc_date <- function(fid, ntime = -1, unit = NULL, to_char = FALSE){
 
     if (is.null(unit)) unit = fid$dim$time$units %>% str_extract(".*(?= since)")
     secs <- switch(unit, 
+        "seconds" = 1, 
         "hours" = 3600, 
         "days"  = 86400)
     date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals[1:ntime])*secs}
