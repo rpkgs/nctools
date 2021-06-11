@@ -10,3 +10,14 @@ listk <- function (...) {
     return(x)
 }
 
+#' @export
+str_year <- function(x) stringr::str_extract(basename(x), "\\d{4}")
+
+rm_empty <- function(x) {
+    if (is.list(x)) {
+        x[sapply(x, length) > 0]
+    }
+    else {
+        x[!is.na(x)]
+    }
+}

@@ -11,10 +11,12 @@ Depends:
     R (>= 3.5)
 Imports: 
     ncdf4,
+    sp,
     magrittr, 
     PCICt,
     lubridate,
     stringr,
+    glue,
     bigmemory, 
     abind,
     crayon,
@@ -24,6 +26,7 @@ Remotes: rpkgs/Ipaper
 Suggests: 
     testthat,
     covr, 
+    raster,
     matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
