@@ -49,7 +49,7 @@
 #' range <- c(70,140, 15, 55)
 #' l <- ncread(file, varnames = "tasmax", range = range, delta = 2, ntime = 1)
 #' }
-#'
+#' 
 #' @return list(dim, date, value)
 ncread <- function(file,
                     varnames = 1L,

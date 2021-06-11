@@ -3,23 +3,54 @@
 \name{ncdim_def}
 \alias{ncdim_def}
 \alias{ncdim_def_lonlat}
+\alias{ncdim_def_time}
 \alias{ncdim_def_range}
 \title{Define a netCDF Dimension for \code{ncwrite}}
 \usage{
 ncdim_def_lonlat(lons, lats, dates = NULL, ...)
 
+ncdim_def_time(dates = NULL)
+
 ncdim_def_range(
   dim,
   range = c(-180, 180, -90, 90),
   dates = NULL,
-  calendar = "gregorian"
+  calendar = "gregorian",
+  date_origin = "1970-01-01",
+  by = "month"
 )
 }
 \arguments{
-\item{dates}{PCICt object. The default origin is '1970-01-01'}
+\item{dates}{PCICt, Date or Date string object. The default origin is '1970-01-01'}
 
 \item{...}{ignored parameters}
+
+\item{dim}{dimension of nc.array, \verb{[nlon, nlat, ntime]}}
+
+\item{range}{\verb{[lon_min, lon_max, lat_min, lat_max]}}
+
+\item{calendar}{Calendar types include 360 day calendars("360_day",  "360"),
+365 day calendars ("365_day", "365", "noleap"), and Gregorian calendars
+("gregorian", "proleptic_gregorian").}
 }
 \description{
 Define a netCDF Dimension for \code{ncwrite}
+}
+\examples{
+## 1. define time dimension
+dates = seq(as.Date("2010-01-01"), as.Date("2010-12-01"), by = "month")
+dates_str = format(dates)
+
+# both of `date` or `string` all work
+t1 = ncdim_def_time(dates)
+t2 = ncdim_def_time(dates_str)
+str(t1)
+all.equal(t1, t2)
+
+## 2. define by range
+dim  = c(360, 180, 12)
+dims_2 = ncdim_def_range(dim) \%>\% str()
+
+## 3. define by lat and lon
+dims_3 = ncdim_def_lonlat(-180:180, -90:90) \%>\% str()
 }

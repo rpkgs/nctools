@@ -1,19 +1,3 @@
-#' nc file dimension definition
-#' @export 
-def_time <- function(dates = NULL) {
-    if (!is(dates, "PCICt")) dates = as.PCICt(format(dates), cal = "gregorian")
-    
-    calendar = attr(dates, "cal")
-    # if (is.null(calendar)) calendar <- "gregorian"
-    # DATE_ORIGIN = as.PCICt("1970-01-01", cal = calendar) # "360_day"
-    times = as.numeric(dates)/86400 # convert to days
-    
-    # times <- difftime(dates, DATE_ORIGIN, units = "days") %>% as.numeric()
-    # times <- times[1:dim[ndim]]
-    timedim <- ncdim_def("time", "days since 1970-01-01", times, calendar = calendar, unlim = TRUE)
-    timedim
-}
-
 #' @name ncdim_def
 #' @title Define a netCDF Dimension for `ncwrite`
 #' 
@@ -25,27 +9,54 @@ ncdim_def_lonlat <- function(lons, lats, dates = NULL, ...) {
     latdim <- ncdim_def("lat", "degrees_north", lats)
 
     ans = list(lon = londim, lat = latdim, ...)
-    if (!is.null(dates)) ans$time = def_time(dates)
+    if (!is.null(dates)) ans$time = ncdim_def_time(dates)
     ans
 }
 
+# ' @description 
+# ' - `ncdim_def_time`: define time dimension
+#' @example R/examples/ex-ncdim.R
+#' 
+#' @rdname ncdim_def
+#' @export 
+ncdim_def_time <- function(dates = NULL) {
+    if (!is(dates, "PCICt")) dates = as.PCICt(format(dates), cal = "gregorian")
+    
+    calendar = attr(dates, "cal")
+    times <- as.numeric(dates) / 86400 # convert to days
+    timedim <- ncdim_def("time", "days since 1970-01-01", times, calendar = calendar, unlim = TRUE)
+    timedim
+    # if (is.null(calendar)) calendar <- "gregorian"
+    # DATE_ORIGIN = as.PCICt("1970-01-01", cal = calendar) # "360_day"
+    # times <- difftime(dates, DATE_ORIGIN, units = "days") %>% as.numeric()
+}
+
 # dims <- ncvar_def_sp(dim, range, dates)
-#' @param dates PCICt object. The default origin is '1970-01-01'
+
+#' @param dim dimension of nc.array, `[nlon, nlat, ntime]`
+#' @param dates PCICt, Date or Date string object. The default origin is '1970-01-01'
+#' @param range `[lon_min, lon_max, lat_min, lat_max]`
+#' @param calendar Calendar types include 360 day calendars("360_day",  "360"), 
+#' 365 day calendars ("365_day", "365", "noleap"), and Gregorian calendars 
+#' ("gregorian", "proleptic_gregorian").
 #' 
 #' @rdname ncdim_def
 ncdim_def_range <- function(
     dim,
     range = c(-180, 180, -90, 90),
     dates = NULL, 
-    calendar = "gregorian")
+    calendar = "gregorian", 
+    date_origin = "1970-01-01", by = "month")
 {
     if (is.null(calendar)) calendar <- "gregorian"
     DATE_ORIGIN = as.PCICt("1970-01-01", cal = calendar) # "360_day"
 
     ndim = length(dim) %>% pmax(1)
     # 1. The last dimension is treated as time
-    if (is.null(dates)) dates = as.PCICt(DATE_ORIGIN, cal=calendar) + (0:(dim[ndim] - 1))*86400
-    timedim = def_time(dates)
+    if (is.null(dates)) {
+        dates = seq(as.Date(date_origin), by = by, length.out = dim[ndim])
+    }
+    timedim = ncdim_def_time(dates)
 
     # 2. define dimensions -----------------------------------------------------
     if (!is.null(range)) {
@@ -65,13 +76,8 @@ ncdim_def_range <- function(
             stop("ndim should be less than 3!")
         }
     }
-    
-    # Calendar types include 360 day calendars("360_day", "360"), 365 day calendars
-    # ("365_day", "365", "noleap"), and Gregorian calendars ("gregorian",
-    # "proleptic_gregorian")
     dims
 }
-
 
 # ' @param range 2 numeric vector
 get_coord <- function(range, length) {

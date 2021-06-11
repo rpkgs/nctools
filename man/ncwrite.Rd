@@ -17,7 +17,7 @@ ncwrite(
   dates = NULL,
   calendar = "gregorian",
   missval = -9999L,
-  compression = NA,
+  compression = 1,
   scale,
   offset,
   attrs,
