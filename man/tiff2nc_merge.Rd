@@ -2,10 +2,13 @@
 % Please edit documentation in R/nc_convert.R
 \name{tiff2nc_merge}
 \alias{tiff2nc_merge}
+\alias{tiff2nc}
 \alias{tiff2nc_process}
 \title{convert tif into nc files and merge}
 \usage{
 tiff2nc_merge(files, outfile = "merged.nc", overwrite = FALSE, cache = TRUE)
+
+tiff2nc(files, overwrite = FALSE)
 
 tiff2nc_process(
   files,

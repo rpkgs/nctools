@@ -1,17 +1,20 @@
 #' rewrite netcdf to fix attribute information
-#' 
+#'
 #' @inheritParams ncwrite
 #' @param bands variable names
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' nc_rewrite(file, outfile, bands, units, longnames, dates)
 #' }
 #' @export
-nc_rewrite <- function(file, outfile,
-                       bands = NULL, var.units = NULL, var.longname = NULL, dates = NULL) {
-    lst <- ncread_all(file)
-    info <- ncdim_get(file)
+nc_rewrite <- function(x, outfile,
+                       bands = NULL, var.units = NULL, var.longname = NULL, dates = NULL, info = NULL) {
+    if (is.character(x)) {
+        file <- x
+        lst  <- ncread_all(file)
+        info <- ncdim_get(file)
+    } else lst = x
 
     if (is.null(bands)) bands <- names(lst)
     if (!is.null(dates)) {

@@ -13,21 +13,29 @@
 tiff2nc_merge <- function(files, outfile = "merged.nc", overwrite = FALSE, cache = TRUE) {
     cat("infiles: \n") # cat(str(files), "\n")
     print(files)
-
-    files_nc <- gsub("\\..{1,4}$", ".nc", files)
-    for (infile in files) {
-        file_nc <- gsub("\\..{1,4}$", ".nc", infile)
-        if (!file.exists(file_nc) || overwrite) {
-            cmd <- glue('gdal_translate -ot Float32 -of netCDF -co "FORMAT=NC4" {infile} {file_nc}')
-            system(cmd)
-        }
-    }
+    
+    files_nc <- tiff2nc(files, overwrite = overwrite)
     file_nc <- paste(files_nc, collapse = " ")
     if (!file.exists(outfile) || overwrite) {
         system(glue("cdo -f nc4 -z zip_1 cat {file_nc} {outfile}"))
     }
     if (!cache) file.remove(files_nc)
     invisible()
+}
+
+#' @rdname tiff2nc_merge
+#' @export
+tiff2nc <- function(files, overwrite = FALSE) {
+    files_nc <- gsub("\\..{1,4}$", ".nc", files)
+    for (infile in files) {
+        file_nc <- gsub("\\..{1,4}$", ".nc", infile)
+        if (!file.exists(file_nc) || overwrite) {
+            ok(sprintf("[processing]: %s\n", infile))
+            cmd <- glue('gdal_translate -ot Float32 -of netCDF -co "FORMAT=NC4" {infile} {file_nc}')
+            system(cmd)
+        }
+    }
+    files_nc
 }
 
 #' @examples 

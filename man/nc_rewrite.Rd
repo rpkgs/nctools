@@ -5,17 +5,16 @@
 \title{rewrite netcdf to fix attribute information}
 \usage{
 nc_rewrite(
-  file,
+  x,
   outfile,
   bands = NULL,
   var.units = NULL,
   var.longname = NULL,
-  dates = NULL
+  dates = NULL,
+  info = NULL
 )
 }
 \arguments{
-\item{file}{Name of the netCDF file to be created.}
-
 \item{bands}{variable names}
 
 \item{var.units}{untis of variables in \code{lst}}
