@@ -53,4 +53,8 @@ dims_2 = ncdim_def_range(dim) \%>\% str()
 
 ## 3. define by lat and lon
 dims_3 = ncdim_def_lonlat(-180:180, -90:90) \%>\% str()
+
+
+library(rgdal)
+file = "H:/global_WB/ET/diagnosed_PML/v017/PMLV2_yearly_v17_ERA5L_2005-01-01.nc"
 }

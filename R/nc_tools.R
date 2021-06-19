@@ -3,15 +3,6 @@ merge_nc <- function(files) {
 }
 
 #' @export
-nc_info <- function(file, verbose = TRUE) {
-    fid <- nc_open(file)
-    on.exit(nc_close(fid)) # make sure closed on error
-
-    if (verbose) print(fid)
-    names(fid$var) %>% set_names(., .)
-}
-
-#' @export
 nc_range <- function(r) {
     if (class(r)[1] != "raster2") {
         r <- ncread(r, NULL, ntime = -1)

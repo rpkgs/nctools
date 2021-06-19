@@ -18,7 +18,7 @@ ncdim_def_lonlat <- function(lons, lats, dates = NULL, ...) {
 #' @example R/examples/ex-ncdim.R
 #' 
 #' @rdname ncdim_def
-#' @export 
+#' @export
 ncdim_def_time <- function(dates = NULL) {
     if (!is(dates, "PCICt")) dates = as.PCICt(format(dates), cal = "gregorian")
     
@@ -41,6 +41,7 @@ ncdim_def_time <- function(dates = NULL) {
 #' ("gregorian", "proleptic_gregorian").
 #' 
 #' @rdname ncdim_def
+#' @export 
 ncdim_def_range <- function(
     dim,
     range = c(-180, 180, -90, 90),
