@@ -1,23 +1,12 @@
-listk <- function (...) {
-    cols <- as.list(substitute(list(...)))[-1]
-    vars <- names(cols)
-    Id_noname <- if (is.null(vars)) 
-        seq_along(cols)
-    else which(vars == "")
-    if (length(Id_noname) > 0) 
-        vars[Id_noname] <- sapply(cols[Id_noname], deparse)
-    x <- setNames(list(...), vars)
-    return(x)
-}
-
-#' @export
-str_year <- function(x) stringr::str_extract(basename(x), "\\d{4}")
-
-rm_empty <- function(x) {
-    if (is.list(x)) {
-        x[sapply(x, length) > 0]
-    }
-    else {
-        x[!is.na(x)]
-    }
+meshgrid <- function(x, y = x) 
+{
+    if (!is.numeric(x) || !is.numeric(y)) 
+        stop("Arguments 'x' and 'y' must be numeric vectors.")
+    x <- c(x)
+    y <- c(y)
+    n <- length(x)
+    m <- length(y)
+    X <- matrix(rep(x, each = m), nrow = m, ncol = n)
+    Y <- matrix(rep(y, times = n), nrow = m, ncol = n)
+    return(list(X = X, Y = Y))
 }

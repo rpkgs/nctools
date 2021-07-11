@@ -2,7 +2,7 @@ context("ncread_cmip5")
 
 test_that("multiplication works", {
     # skip_if_not(isTestNC)
-    ncfile <- system.file("extdata/nc/test-Tmean.nc", package = "CMIP5tools")
+    ncfile <- system.file("extdata/nc/test-Tmean.nc", package = "CMIP6tools")
     cat(sprintf("\ntest ncfile: %s ...\n", basename(ncfile)))
     
     # no varname no value returned

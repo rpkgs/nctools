@@ -84,7 +84,7 @@ interp3d_bilinear <- function (grid, z,
 
     if (na.rm == TRUE) {
         vv    <- abind(v00, v01, v10, v11, along = 3)
-        vmean <- apply_3d(vv, 3, rowMeans2)
+        vmean <- apply_3d(vv, 3,matrixStats::rowMeans2)
 
         # browser()
         I_good <- rowSums(is.na(vmean)) != ncol(vv) # if all na, no need to interp

@@ -1,3 +1,5 @@
+prj84 <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+
 #' plot raster2 object
 #' 
 #' @param x `cmip5` object returned from ncread

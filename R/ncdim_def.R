@@ -81,6 +81,7 @@ ncdim_def_range <- function(
 }
 
 # ' @param range 2 numeric vector
+#' @export
 get_coord <- function(range, length) {
     from <- range[1]
     to   <- range[2]

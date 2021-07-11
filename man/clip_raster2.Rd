@@ -13,7 +13,8 @@ clip_raster2(x, range)
 clip raster2 regional data
 }
 \examples{
-library(CMIP5tools)
+\dontrun{
+library(CMIP6tools)
 # library(rgdal)
 # library(sp2)
 library(maptools)
@@ -39,4 +40,5 @@ x_clip <- clip_raster2(x, range)
 
 plot(x_interp)
 plot(x_clip) # , sp.layout = sp_arc_CH
+}
 }

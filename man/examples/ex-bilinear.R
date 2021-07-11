@@ -1,4 +1,5 @@
-library(CMIP5tools)
+\dontrun{
+library(CMIP6tools)
 set.seed(100)
 range <- c(70, 140, 15, 55)
 
@@ -18,3 +19,4 @@ z <- array(rnorm(nlon*nlat*ntime), c(nlon, nlat, ntime))
 
 r_bilinear  <- interp3d_bilinear(grid, z, range = range, cellsize_x = 1, convertTo2d = FALSE)
 image(r_bilinear$data[, , 1])
+}

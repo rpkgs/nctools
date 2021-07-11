@@ -12,7 +12,7 @@ clip_raster2 <- function(x, range){
     loc <- meshgrid(lon, lat) %>% map(as.numeric)
     # x <- get_grid.raster2(x, varname = NULL)
     # loc <- coordinates(x) %>% set_names(c("lon", "lat"))
-    loc <- as.data.table(loc) %>% cbind(I = 1:length(loc$lon))
+    loc <- data.table::as.data.table(loc) %>% cbind(I = 1:length(loc$lon))
     
     info <- loc[lon >= range2[1] & lon <= range2[2] & 
                 lat >= range2[3] & lat <= range2[4], ]

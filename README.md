@@ -3,9 +3,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/rpkgs/nctools/workflows/R-CMD-check/badge.svg)](https://github.com/rpkgs/nctools/actions)
-[![Travis build status](https://travis-ci.com/kongdd/nctools.svg?branch=master)](https://travis-ci.com/kongdd/nctools)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/kongdd/nctools?branch=master&svg=true)](https://ci.appveyor.com/project/kongdd/nctools)
-[![Codecov test coverage](https://codecov.io/gh/kongdd/nctools/branch/master/graph/badge.svg)](https://codecov.io/gh/kongdd/nctools?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/rpkgs/nctools/branch/master/graph/badge.svg)](https://codecov.io/gh/rpkgs/nctools?branch=master)
 <!-- badges: end -->
 
 The goal of nctools is to ...

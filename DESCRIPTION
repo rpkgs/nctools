@@ -1,6 +1,6 @@
 Package: nctools
 Title: Tools tidy nc files
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(
     person("Dongdong", "Kong", role = c("aut", "cre"), email = "kongdd.sysu@gmail.com"))
 Description: Read, write, and process NETCDF files. 
@@ -11,7 +11,7 @@ Depends:
     R (>= 3.5)
 Imports: 
     ncdf4,
-    sp,
+    sp, terra, 
     magrittr, 
     PCICt,
     lubridate,
@@ -20,13 +20,16 @@ Imports:
     bigmemory, 
     abind,
     crayon,
-    utils, 
-    Ipaper
+    utils, methods,
+    Ipaper,
+    foreach
 Remotes: rpkgs/Ipaper
 Suggests: 
     testthat,
     covr, 
     raster,
+    rgdal,
+    data.table,
     matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

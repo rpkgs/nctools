@@ -16,9 +16,10 @@ nc_date <- function(fid, ntime = -1, unit = NULL, to_char = FALSE){
     }
 
     ctime    <- fid$dim$time # time class
-    origin   <- ctime$units %>% str_extract("\\d{2,4}-\\d{1,2}-\\d{1,2}")
+    # origin   <- ctime$units %>% str_extract("\\d{2,4}-\\d{1,2}-\\d{1,2}")
+    origin <- ctime$units %>% str_extract("(?<=since ).*")
     calendar <- ctime$calendar
-
+    
     if (is.null(calendar)) calendar <- "gregorian"
     nslice <- fid$dim$time$len
     if (ntime == -1) ntime <- nslice
