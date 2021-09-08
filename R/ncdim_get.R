@@ -5,9 +5,16 @@ ncdim_get <- function(file, sort.lat = TRUE) {
     on.exit(nc_close(fid))
 
     dates <- nc_date(file)
-    lon <- ncread(file, "lon")
+    
+    tryCatch({
+        lon <<- ncread(file, "lon")
+        lat <<- ncread(file, "lat")
+    }, error = function(e) {
+        message(sprintf("%s", e$message))
+        lon <<- ncread(file, "longitude")
+        lat <<- ncread(file, "latitude")
+    })
     # make sure increase order, this why gleam need to fix
-    lat <- ncread(file, "lat")
     if (sort.lat) lat %<>% sort() # increasing order
     dims <- ncdim_def_lonlat(lon, lat, dates)
 

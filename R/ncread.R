@@ -107,10 +107,11 @@ ncread <- function(file,
         date <- guess_date(nslice, file, calendar, origin, check_date = check_date) # character like that '2010-02-30'
     } else {
         if (!is.null(calendar)) {
-            date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals)*86400}
+            date <- nc_date(fid)
+            # date <- {as.PCICt(origin, cal=calendar) + (fid$dim$time$vals)*86400}
         }
     }
-
+    
     # time <- ncvar_get(fid, "time")
     if (!missing(DatePeriod) && !is.null(date)){
         DatePeriod = check_DatePeriod(DatePeriod, calendar)
