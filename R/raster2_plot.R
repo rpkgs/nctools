@@ -1,4 +1,8 @@
-prj84 <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+#' @importFrom sp CRS
+get_prj <- function() {
+    # prj84
+    sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+}
 
 #' plot raster2 object
 #' 
@@ -82,7 +86,9 @@ get_grid.raster2 <- function(x, varname = NULL, range = NULL, fix_lon360 = TRUE)
     grid
 }
 
-get_grid.lonlat <- function(lon, lat, fix_lon360 = FALSE) {
+get_grid.lonlat <- function(lon, lat, fix_lon360 = FALSE, prj = NULL) {
+    if (is.null(prj)) prj = get_prj()
+    
     lon2 <- seq(min(lon), max(lon), length.out = length(lon))
     lat2 <- seq(min(lat), max(lat), length.out = length(lat))
     points <- expand.grid(lon2, lat2)
