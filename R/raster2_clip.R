@@ -1,6 +1,6 @@
 #' clip raster2 regional data 
 #' 
-#' @param x raster2 object returned by `ncread`
+#' @param x raster2 object returned by `ncread_cmip`
 #' 
 #' @example man/examples/ex-raster2.R
 #' @export

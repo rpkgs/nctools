@@ -9,8 +9,6 @@ nc_date(fid, ntime = -1, unit = NULL, to_char = FALSE)
 \arguments{
 \item{fid}{An object of class ncdf4 retuned by \code{\link[ncdf4:nc_open]{ncdf4::nc_open()}}}
 
-\item{ntime}{How many time to read?}
-
 \item{datastr}{Boolean. Whether convert date to string?}
 }
 \description{

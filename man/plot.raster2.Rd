@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{x}{\code{cmip5} object returned from ncread}
+\item{x}{\code{cmip5} object returned from \code{\link[=ncread_cmip]{ncread_cmip()}}}
 
 \item{varname}{variable name in the data of \code{x}}
 

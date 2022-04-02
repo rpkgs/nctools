@@ -6,7 +6,7 @@ get_prj <- function() {
 
 #' plot raster2 object
 #' 
-#' @param x `cmip5` object returned from ncread
+#' @param x `cmip5` object returned from [ncread_cmip()]
 #' @param varname variable name in the data of `x`
 #' @param zcols how many columns to plot? default is 4.
 #' @param I_sel A vector indicating subset rows of `x`

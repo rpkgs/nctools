@@ -7,7 +7,7 @@
 get_grid.raster2(x, varname = NULL, range = NULL, fix_lon360 = TRUE)
 }
 \arguments{
-\item{x}{\code{cmip5} object returned from ncread}
+\item{x}{\code{cmip5} object returned from \code{\link[=ncread_cmip]{ncread_cmip()}}}
 
 \item{varname}{variable name in the data of \code{x}}
 

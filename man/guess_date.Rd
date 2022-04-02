@@ -9,12 +9,9 @@ guess_date(nslice, file, calendar = "365", origin, check_date = FALSE)
 \arguments{
 \item{nslice}{length of time in original nc file.}
 
-\item{file}{Character, nc file name.}
+\item{file}{file path}
 
 \item{calendar}{the calendar type.}
-
-\item{check_date}{If true, check whether date in nc file is consistent with
-\code{date_begin} and \code{date_end} in its filename.}
 }
 \value{
 PCICt date vector

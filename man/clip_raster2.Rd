@@ -7,7 +7,7 @@
 clip_raster2(x, range)
 }
 \arguments{
-\item{x}{raster2 object returned by \code{ncread}}
+\item{x}{raster2 object returned by \code{ncread_cmip}}
 }
 \description{
 clip raster2 regional data

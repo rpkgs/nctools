@@ -61,7 +61,7 @@ nc_merge <- function(d,
         DatePeriod <- c(d$start_adj[i], d$end_adj[i]) %>% format(DATE_FORMAT)
         file       <- d$file[i]
 
-        l <- ncread(file, varname = NULL, range = range, delta = delta,
+        l <- ncread_cmip(file, varname = NULL, range = range, delta = delta,
             ntime = -1, DatePeriod = DatePeriod,
             grid_type = NULL,
             scale = scale, offset = offset, value_range = value_range,
@@ -97,7 +97,7 @@ nc_merge <- function(d,
                 green(file_size(file))))
         }
 
-        l <- ncread(file, varname = varname, range = range, delta = delta,
+        l <- ncread_cmip(file, varname = varname, range = range, delta = delta,
             ntime = -1, DatePeriod = DatePeriod,
             grid_type = "mat",
             scale = scale, offset = offset, value_range = value_range,

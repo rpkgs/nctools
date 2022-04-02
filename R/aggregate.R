@@ -7,7 +7,7 @@ nc_aggregate_mat <- function(file, vars_mean = NULL, is_save = TRUE, overwrite =
     dates <- nc_date(file)
     dates_new <- make_date(sort(unique(year(dates))))
 
-    l <- ncread(file, -1)$data
+    l <- ncread_cmip(file, -1)$data
 
     res <- rep(list(NULL), length(varnames)) %>% set_names(varnames)
     for(i in seq_along(varnames)) {

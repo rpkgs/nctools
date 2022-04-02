@@ -29,7 +29,7 @@ test_that("ncread and ncwrite works", {
                 verbose = FALSE, overwrite = FALSE)
         expect_equal(format(dates), format(nc_date(file)))
         ## 2. read netcdf file
-        l <- ncread(file, c(1, 2))
+        l <- ncread_cmip(file, c(1, 2))
         file.remove(file)
         TRUE
     })
@@ -52,7 +52,7 @@ test_that("ncread and ncwrite works", {
                 scale = 0.001, offset = 0,
                 # dates = as.Date("2000-01-01"),
                 verbose = FALSE, overwrite = FALSE)
-        l <- ncread(file, -1)
+        l <- ncread_cmip(file, -1)
 
         ## second solution
         dates <- seq(as.Date("2000-01-01"), as.Date('2000-01-04'), by = "day")

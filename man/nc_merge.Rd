@@ -20,33 +20,12 @@ nc_merge(
 \arguments{
 \item{d}{A data.frame at least with the columns of 'start_adj', 'end_adj' and 'file'`.}
 
-\item{range}{A numeric vector, \verb{[lon_min, lon_max, lat_min, lat_max]}. If \code{range}
-is \code{NULL}, \code{delta} will be ignored, and all data will be read.}
-
-\item{delta}{suggest 3deg. Extend range into \verb{[lat_min - delta, lat_max + delta, lon_min - delta, lon_max + delta]}. This is to make sure no missing value in
-margin.}
-
 \item{verbose}{whether to show reading progress?}
 
 \item{bigmemory}{Boolean. If true, 3d array memory will be pre-allocated.
 To do this, we need to open nc files first than get the dimension information.
 This step will sacrifice some time. If false, temporary data are stored in
 list and finally convert to 3d array.}
-
-\item{scale}{If the variable in the netCDF file has a scale and/or offset
-attribute defined, the returned data are automatically and silently scaled
-and/or offset as requested. Then you should just leave scale = 1,
-and offset = 0.}
-
-\item{offset}{If the variable in the netCDF file has a scale and/or offset
-attribute defined, the returned data are automatically and silently scaled
-and/or offset as requested. Then you should just leave scale = 1,
-and offset = 0.}
-
-\item{value_range}{If not null, values out of \code{value_range} are set to
-NA.}
-
-\item{adjust_lon}{If true, lon = lon + cellsize_y/2}
 }
 \value{
 \itemize{

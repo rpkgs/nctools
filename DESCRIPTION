@@ -1,6 +1,6 @@
 Package: nctools
 Title: Tools tidy nc files
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Dongdong", "Kong", role = c("aut", "cre"), email = "kongdd.sysu@gmail.com"))
 Description: Read, write, and process NETCDF files. 

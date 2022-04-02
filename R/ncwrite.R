@@ -1,6 +1,6 @@
 #' Write CMIP5 nc file
 #'
-#' @inheritParams ncread
+#' @inheritParams ncread_cmip
 #' @inheritParams ncdf4::ncvar_def
 #'
 #' @param lst A named list of 3d arrays, which have the dimension of `[nlon, nlat, ntime]`.
@@ -23,7 +23,7 @@
 #' and offset = 0.
 #' @param range A numeric vector, `[lon_min, lon_max, lat_min, lat_max]`.
 #'
-#' @seealso [ncread], [ncdf4::ncvar_def]
+#' @seealso [ncread_cmip()], [ncdf4::ncvar_def()]
 #'
 #' @examples
 #' \dontrun{

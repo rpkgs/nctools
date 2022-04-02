@@ -5,7 +5,7 @@ merge_nc <- function(files) {
 #' @export
 nc_range <- function(r) {
     if (class(r)[1] != "raster2") {
-        r <- ncread(r, NULL, ntime = -1)
+        r <- ncread_cmip(r, NULL, ntime = -1)
     }
 
     cellsize_x = r$grid.origin$cellsize_x
@@ -43,7 +43,7 @@ nc_aggregateToYearly <- function(infile, outfile, vars_mean = NULL, overwrite = 
     for (varname in varnames) {
         # print(varname)
         fprintf("process: %s ...\n", varname)
-        l <- ncread(infile, varname, ntime = -1, grid_type = NULL) # vec
+        l <- ncread_cmip(infile, varname, ntime = -1, grid_type = NULL) # vec
         array <- l$data[[1]]
 
         type <- if (!is.null(vars_mean) && varname %in% vars_mean) "mean" else "sum"

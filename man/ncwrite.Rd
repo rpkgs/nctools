@@ -82,5 +82,5 @@ ncwrite(list(Tmin = arr[,,1:2]), "Tmin.nc", "degC", range = range_china,
 
 }
 \seealso{
-\link{ncread}, \link[ncdf4:ncvar_def]{ncdf4::ncvar_def}
+\code{\link[=ncread_cmip]{ncread_cmip()}}, \code{\link[ncdf4:ncvar_def]{ncdf4::ncvar_def()}}
 }
