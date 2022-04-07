@@ -17,7 +17,6 @@ Imports:
     lubridate,
     stringr,
     glue,
-    bigmemory, 
     abind,
     crayon,
     utils, methods,

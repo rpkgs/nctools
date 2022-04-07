@@ -1,28 +1,17 @@
-\dontrun{
-library(CMIP6tools)
-set.seed(100)
-range <- c(70, 140, 15, 55)
+set.seed(1)
+range = c(70, 140, 15, 55)
+grid = coords_from_range(range, cellsize = 2)
+grid_target = coords_from_range(range, cellsize = 1)
 
-cellsize <- 2
-lon <- seq(range[1], range[2], cellsize)
-lat <- seq(range[3], range[4], cellsize)
-nlat  <- length(lat); nlon <- length(lon)
+nlat  <- length(grid$lat)
+nlon <- length(grid$lon)
 ntime <- 10
 
-# pnts <- expand.grid(lon, lat)
-# pos  <- meshgrid(lon, lat)
-# pnts2 <- list(pos$lon, pos$lat) %>% map(as.numeric) %>% as.data.table()
-# (as.matrix(pnts2) - as.matrix(pnts) ) %>% summary()
-
-grid <- list(lon = lon, lat = lat) #[,,1:100]
 z <- array(rnorm(nlon*nlat*ntime), c(nlon, nlat, ntime))
 
-r_bilinear  <- interp3d_bilinear(grid, z, range = range, cellsize_x = 1, convertTo2d = FALSE)
-image(r_bilinear$data[, , 1])
-}
+z_bl  <- interp3d_bilinear(z, grid, grid_target)
+image(z[,,1])
+image(z_bl[,,1])
 
-## test for terra bilinear
-r = make_rast(cellsize = 30, vals = c(1:71, NA))
-r2 = make_rast(cellsize = 60)
-
-resample(r, r2)
+# make_rast(range, cellsize = 2, vals = z)
+# rast(z) %>% disagg(fact = 2, method = "bilinear")

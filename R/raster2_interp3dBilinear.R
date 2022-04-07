@@ -1,65 +1,54 @@
 #' Bilinear interpolation for 3d array
 #' 
-#' @param grid A list object with "lon", "lat".
-#' \itemize{
-#' \item lon numeric, with the length of nlon. 
-#' \item lat numeric, with the length of nlat.
-#' \item ... other elements will be ignore
-#' }
-#' @param z 3d array (lon, lat, time), with the dimension of `[nlon, nlat, ntime]`.
-#' `image(z[,,1])` should look normal.
+#' @param grid A list object with lon`, `lat` and `loc`.
+#' - `lon`: numeric, `[nlon]`
+#' - `lat`: numeric, `[nlon]`
 #' 
-#' @param range A numeric vector, `[lat_min, lat_max, lon_min, lon_max]`
-#' @param cellsize_x Degree, cell size in the horizontal direction.
-#' @param cellsize_y Degree, cell size in the Vertical direction.
+#' @param grid_target A list object with `lon`, `lat` and `loc`.
+#' - `lon`: numeric, `[nlon]`
+#' - `lat`: numeric, `[nlon]`
+#' - `loc`: a data.frame with the column of c("x", "y"), with the row length of
+#' `nlon*nlat`.
+#' 
+#' @param z 3d array (lon, lat, time), with the dimension of `[nlon, nlat,
+#' ntime]`. `image(z[,,1])` should look normal.
+#' 
 #' @param na.rm If true, Na value in margin will be fixed.
 #' 
 #' @rdname interp3d_bilinear
 #' 
-#' @note High resolution interpolating to low resolution will lead to unreliable result, if 
-#' `cellsize.new/cellsize.origin > 2`.
+#' @note High resolution interpolating to low resolution will lead to unreliable
+#' result, if `cellsize.new/cellsize.origin > 2`.
 #' 
-#' @example man/examples/ex-raster2.R
+#' @example R/examples/ex-raster2.R
+#' @importFrom abind abind 
 #' @export 
-interp3d_bilinear <- function (grid, z, 
-    range = c(70, 140, 15, 55), 
-    cellsize_x = 1, cellsize_y = cellsize_x, 
-    na.rm = FALSE, 
-    convertTo2d = TRUE) 
+interp3d_bilinear <- function (z, grid = NULL, 
+    grid_target, 
+    # range = c(70, 140, 15, 55), 
+    # cellsize_x = 1, cellsize_y = cellsize_x, 
+    na.rm = TRUE, 
+    convertTo2d = FALSE) 
 {
-    lon_range <- range[1:2]
-    lat_range <- range[3:4]
-    
-    dx <- cellsize_x/2
-    dy <- cellsize_y/2
-    xx <- seq(lon_range[1] + dx, lon_range[2], by = cellsize_x)
-    yy <- seq(lat_range[1] + dy, lat_range[2], by = cellsize_y)
-    nxx <- length(xx)
-    nyy <- length(yy)
-    
-    # Due to longitude is the first dimension, there is a `transform`.
-    loc <- meshgrid(xx, yy) %>% set_names(c("x", "y"))
-
-    grid.origin <- grid
-    grid$lon <- xx; grid$lat <- yy # update dim
-    grid$cellsize_x <- cellsize_x
-    grid$cellsize_y <- cellsize_y
-    # dim <- list(lon = xx, lat = yy) # , date = grid.origin$date
-
-    x <- grid.origin$lon
-    y <- grid.origin$lat
+    x = grid$lon
+    y = grid$lat
     # z <- obj.value # 3d array
-    
     nx <- length(x)
     ny <- length(y)
     
     ndim <- length(dim(z))
     nz   <- ifelse(ndim <= 1, 1, last(dim(z)))
 
-    if (ndim >= 3 || ndim <= 1) {
-        z <- `dim<-`(z, c(nx*ny, nz))
+    if (ndim >= 3) {
+        z %<>% set_dim(c(nx * ny, nz))
     }
     
+    xx = grid_target$lon
+    yy = grid_target$lat
+    nxx <- length(xx)
+    nyy <- length(yy)
+    loc <- grid_target$loc %>% set_names(c("x", "y"))
+
     lx  <- approx(x, 1:nx, loc$x, rule = 2)$y
     ly  <- approx(y, 1:ny, loc$y, rule = 2)$y
     lx1 <- floor(lx)
@@ -74,7 +63,6 @@ interp3d_bilinear <- function (grid, z,
 
     I_fix <- array(1:(nxx*nyy), dim = c(nxx, nyy)) %>% .[, nyy:1] %>% as.numeric()
     pos   <- array(1:(nx*ny), dim = c(nx, ny))
-    # if (matY.descend){ pos %<>% flipud() } 
     
     # if na value exist, exchange value in vertical direction as `raster` package
     v00 <- z[pos[cbind(lx1    , ly1    )], , drop = FALSE] # left, bottom
@@ -86,7 +74,6 @@ interp3d_bilinear <- function (grid, z,
         vv    <- abind(v00, v01, v10, v11, along = 3)
         vmean <- apply_3d(vv, 3,matrixStats::rowMeans2)
 
-        # browser()
         I_good <- rowSums(is.na(vmean)) != ncol(vv) # if all na, no need to interp
         # 859 NA values, 
         fix_na_each(v00, v01)
@@ -97,14 +84,6 @@ interp3d_bilinear <- function (grid, z,
         fix_na(v10, vmean)
         fix_na(v11, vmean)
     }
-    
-    # fix NA values in z
-    # vals <- abind(v00 * (1 - ex) * (1 - ey), 
-    #         v10 * ex * (1 - ey),
-    #         v01 * (1 - ex) * ey,
-    #         v11 * ex * ey, along = 3) %>% 
-    #     apply_3d(3, rowMeans2) %>% 
-    #     multiply_by(4)
     vals <- v00 * (1 - ex) * (1 - ey) + 
             v10 * ex * (1 - ey) + 
             v01 * (1 - ex) * ey + 
@@ -112,10 +91,11 @@ interp3d_bilinear <- function (grid, z,
 
     # if (matY.descend) vals <- vals[I_fix, ]
     if (!convertTo2d) { vals <- `dim<-`(vals, c(length(xx), length(yy), nz)) }
-    structure(list(grid.origin = grid.origin, 
-            grid = grid, 
-            data = vals),
-        class = "raster2")
+    # structure(list(grid.origin = grid.origin, 
+    #         grid = grid, 
+    #         data = vals),
+    #     class = "raster2")
+    vals
 }
 
 # ' @examples

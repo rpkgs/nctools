@@ -2,7 +2,7 @@
 #' 
 #' @param x raster2 object returned by `ncread_cmip`
 #' 
-#' @example man/examples/ex-raster2.R
+#' @example R/examples/ex-raster2.R
 #' @export
 clip_raster2 <- function(x, range){
     lon <- x$grid$lon

@@ -5,31 +5,29 @@
 \title{Bilinear interpolation for 3d array}
 \usage{
 interp3d_bilinear(
-  grid,
   z,
-  range = c(70, 140, 15, 55),
-  cellsize_x = 1,
-  cellsize_y = cellsize_x,
-  na.rm = FALSE,
-  convertTo2d = TRUE
+  grid = NULL,
+  grid_target,
+  na.rm = TRUE,
+  convertTo2d = FALSE
 )
 }
 \arguments{
-\item{grid}{A list object with "lon", "lat".
+\item{z}{3d array (lon, lat, time), with the dimension of \verb{[nlon, nlat, ntime]}. \code{image(z[,,1])} should look normal.}
+
+\item{grid}{A list object with lon\verb{, }lat\code{and}loc`.
 \itemize{
-\item lon numeric, with the length of nlon.
-\item lat numeric, with the length of nlat.
-\item ... other elements will be ignore
+\item \code{lon}: numeric, \verb{[nlon]}
+\item \code{lat}: numeric, \verb{[nlon]}
 }}
 
-\item{z}{3d array (lon, lat, time), with the dimension of \verb{[nlon, nlat, ntime]}.
-\code{image(z[,,1])} should look normal.}
-
-\item{range}{A numeric vector, \verb{[lat_min, lat_max, lon_min, lon_max]}}
-
-\item{cellsize_x}{Degree, cell size in the horizontal direction.}
-
-\item{cellsize_y}{Degree, cell size in the Vertical direction.}
+\item{grid_target}{A list object with \code{lon}, \code{lat} and \code{loc}.
+\itemize{
+\item \code{lon}: numeric, \verb{[nlon]}
+\item \code{lat}: numeric, \verb{[nlon]}
+\item \code{loc}: a data.frame with the column of c("x", "y"), with the row length of
+\code{nlon*nlat}.
+}}
 
 \item{na.rm}{If true, Na value in margin will be fixed.}
 }
@@ -37,8 +35,8 @@ interp3d_bilinear(
 Bilinear interpolation for 3d array
 }
 \note{
-High resolution interpolating to low resolution will lead to unreliable result, if
-\code{cellsize.new/cellsize.origin > 2}.
+High resolution interpolating to low resolution will lead to unreliable
+result, if \code{cellsize.new/cellsize.origin > 2}.
 }
 \examples{
 \dontrun{
