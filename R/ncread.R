@@ -1,4 +1,7 @@
-guess_varnames <- function(varnames = -1) {
+guess_varnames <- function(fid, varnames = -1) {
+  # fid <- nc_open(file)
+  # on.exit(nc_close(fid)) # make sure closed on error
+
   if (is.numeric(varnames)) {
     varId <- as.integer(varnames)
     if (length(varId) == 1) {
@@ -26,10 +29,10 @@ guess_varnames <- function(varnames = -1) {
 #' 
 #' @export
 ncread <- function(file, varnames = 1L) {
-  fid <- nc_open(file, readunlim = !check_date)
+  fid <- nc_open(file)
   on.exit(nc_close(fid)) # make sure closed on error
 
-  varnames %<>% guess_varnames()
+  varnames %<>% guess_varnames(fid, .)
   ncvar_get(fid, varnames)
 }
 
