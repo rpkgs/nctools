@@ -200,11 +200,3 @@ ncread_cmip <- function(file,
     structure(list(grid.origin = grid.origin, grid = grid, data = vals),
         class = "raster2")
 }
-
-check_DatePeriod <- function(DatePeriod, calendar) {
-    if (calendar %in% c("360", "360_day")) {
-        DatePeriod[2] %<>% gsub("31$", "30", .)
-    }
-    as.PCICt(DatePeriod, calendar)
-    # DatePeriod
-}

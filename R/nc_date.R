@@ -16,6 +16,8 @@ nc_date <- function(fid, ntime = -1, unit = NULL, to_char = FALSE){
     }
 
     ctime    <- fid$dim$time # time class
+    if (is.null(ctime)) return(NULL)
+    
     # origin   <- ctime$units %>% str_extract("\\d{2,4}-\\d{1,2}-\\d{1,2}")
     origin <- ctime$units %>% str_extract("(?<=since ).*")
     calendar <- ctime$calendar

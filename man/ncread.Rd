@@ -5,7 +5,7 @@
 \alias{ncread_all}
 \title{ncread}
 \usage{
-ncread(file, varnames = 1L)
+ncread(file, varnames = 1L, ...)
 
 ncread_all(file)
 }
@@ -15,6 +15,8 @@ ncread_all(file)
 \item{varnames}{\itemize{
 \item \code{-1}: all variables
 }}
+
+\item{...}{others to \code{\link[=ncvar_get]{ncvar_get()}}}
 }
 \description{
 ncread
