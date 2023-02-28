@@ -5,7 +5,7 @@
 \alias{ncread_all}
 \title{ncread}
 \usage{
-ncread(file, varnames = 1L, ...)
+ncread(file, varnames = 1L, period = NULL, ...)
 
 ncread_all(file)
 }
