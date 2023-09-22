@@ -7,7 +7,7 @@ library(foreach)
 library(iterators)
 library(abind)
 # library(sp2)
-library(sp)
+# library(sp)
 
 prj84 = CRS("+proj=longlat +datum=WGS84 +no_defs")
 doy_date <- function(year, doy) as.Date(sprintf("%d%03d", year, doy), "%Y%j")

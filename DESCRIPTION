@@ -11,7 +11,7 @@ Depends:
     R (>= 3.5)
 Imports: 
     ncdf4,
-    sp, terra, 
+    terra, 
     magrittr, 
     PCICt,
     lubridate,
